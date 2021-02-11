@@ -1,0 +1,147 @@
+---
+title: JS基础之继承
+date: 2021-1-15
+categories:
+ - JavaScript
+tags:
+ - JS基础
+---
+
+
+
+## 继承
+
+继承可以使子类具有父类的各种方法和属性，也可以重新定义某些属性，或者覆盖属性或方法。
+
+### 1. 原型链继承
+
+```js
+function Parent(){
+  this.name = 'parent'
+  this.values = [1,2,3]
+}
+
+function Child(){
+  this.type = 'child'
+}
+
+Child.prototype = new Parent();		// 挂载到原型对象上
+
+const child1 = new Child();
+const child2 = new Child();
+child1.values.push(111)
+
+console.log(child1)
+console.log(child2)
+```
+
+缺点：通过子类创建出来的实例使用的是同一份原型对象，所以当父类的属性时，所有子实例都会进行修改
+
+### 2. 构造函数继承（借助call）
+
+```js
+function Parent(){
+  this.name = 'parent'
+  this.values = [1,2,3]
+}
+Parent.prototype.getName = function(){
+  return this.name;
+}
+
+function Child(){
+  Parent.call(this)		// 将父类属性绑定
+  this.type = 'child'
+}
+```
+
+缺点：子类实例没有继承到父类的方法
+
+### 3. 组合继承
+
+组合继承也就是上面两种继承方式的组合。
+
+```js
+function Parent(){
+  this.name = 'parent'
+  this.values = [1,2,3]
+}
+Parent.prototype.getName = function(){
+  return this.name;
+}
+
+function Child(){
+  Parent.call(this);	// 继承父类属性
+  this.type = 'child'
+}
+Child.prototype = new Parent()	// 继承父类方法
+```
+
+组合继承不会与父类属性共享，也能继承到父类方法。但是缺点是继承时多次调用父类构造函数，导致子类原型上多了不需要的属性，造成内存上的浪费。
+
+### 4. 寄生组合式继承
+
+在了解寄生式组合继承前需要先了解 ES5 里面的 Object.create 方法，该方法用来创建一个对象，使用现有的对象提供新创建对象的`__proto__`
+
+```js
+Object.create(proto，[propertiesObject])
+```
+
+方法接收两个参数，一是用作新对象原型的对象、二是为新对象定义额外属性的对象（可选参数）。
+
+```js
+let o = {
+  i: 50,
+  ii: [1,2,3]
+}
+
+let obj = Object.create(o);
+let obj2 = Object.create(o, { i: {value: 33 }});
+
+console.log(obj)	// {__proto__: o}
+console.log(obj2)	// {i: 33, __proto__: o}
+console.log(obj.__proto__ === o)	// true
+```
+
+寄生组合式继承是对组合继承的优化，组合继承缺点在于继承父类方法时调用了构造函数，导致多余父类属性的添加，所以只要优化这一点即可。
+
+```js
+function Parent(){
+  this.name = 'parent'
+  this.values = [1,2,3]
+}
+Parent.prototype.getName = function(){
+  return this.name;
+}
+
+function Child(){
+  Parent.call(this)
+  this.type = 'child'
+}
+// 使用 Object.create 继承父类方法
+Child.prototype = Object.create(Parent.prototype)
+// 由于重写了 Child 的原型对象，需要手动加上 constructor 属性
+Child.prototype.constructor = Child
+```
+
+执行后可以看出前几种继承方式的缺点都被优化了
+
+![image-20210127010247459](F:\Study_Document\笔记\image\image-20210127010247459.png)
+
+>  在ES6 extends 这个语法糖实际上用到的就是寄生组合式继承。
+
+### 继承的问题
+
+通过上面的继承方式，你应该了解到继承有个问题：**子类无法决定继承父类的哪些属性，所有属性和方法都得继承**
+
+这个时候你可能就会说了，再创建一个父类啊，指定要哪些属性和方法就行了。但是如果用这种方法就又产生另外的问题了，创建多个父类无疑会造成大量代码的冗余，而且子类改动时父类也要做出相应的改动，耦合度太高，所以我们的架构设计是有问题。
+
+那么要如何解决这些问题呢？
+
+**组合**，也就是将各种属性和方法拆分出来，要使用时将需要的一个个组合起来就可以了。
+
+```
+const compose = (...args) => args组合后的结果
+
+const car = compose(wheel, drvie, addOil)
+```
+

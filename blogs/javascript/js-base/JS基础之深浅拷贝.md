@@ -1,0 +1,221 @@
+---
+title: JS基础之深浅拷贝
+date: 2021-1-13
+categories:
+ - JavaScript
+tags:
+ - JS基础
+---
+
+
+
+### 浅拷贝
+
+浅拷贝：创建新的对象，拷贝目标对象的所有属性值到新的对象中，如果对象属性时基本数据类型，复制基本数据类型的值；如果对象属性是引用数据类型，复制引用数据类型的引用（也就是具体堆内存的地址）。
+
++ 浅拷贝对象
+
+```js
+let source = {a: {b: 1}}
+
+// 第一种 Object.assign
+let target = {}
+Object.assign(target, source)
+
+// 第二种 扩展运算符
+let target = {...source}
+
+// 第三种 Object.create(proto，[propertiesObject])  第一个参数是所创建对象的原型，第二个参数是创建对象的自身属性
+let target = Object.create(
+  Object.getPrototypeOf(source),
+  Object.getOwnPropertyDescriptors(source)		// 获取 source 的所有属性
+);
+```
+
++ 浅拷贝数组，上述拷贝对象的方式也是同样适用于数组的，下面列出数组独有的拷贝方式
+
+```js
+let arr = [1,2,{a: 11}];
+
+// 第一种 concat方法
+arr.concat()
+
+// 第二种 slice方法
+arr.slice()
+```
+
+#### 手动实现浅拷贝
+
+根据以上对浅拷贝的理解，手动实现浅拷贝的实现思路：
+
+1. 浅拷贝对象为基本数据类型时直接拷贝值
+2. 浅拷贝对象为引用数据类型时开辟一个新的存储空间，遍历所有属性，拷贝每个属性的值
+
+```js
+const shallowClone = (target) => {
+  if (typeof target === 'object' && target !== null) {
+    const cloneTarget = Array.isArray(target) ? []: {};
+    for (let prop in target) {
+      cloneTarget[prop] = target[prop];
+    }
+    return cloneTarget;
+  } else {
+    return target;
+  }
+}
+
+shallowClone([1,2,3,{a: 1}])
+```
+
+### 深拷贝
+
+#### 1. 乞丐版（JSON.stringfy）
+
+基本原理是使用 JSON.stringfy() 方法将对象序列化为 JSON 字符串，最后再用 JSON.parse() 的方法将JSON 字符串生成一个新的对象。
+
+```js
+function Parent(){
+  this.name = 1
+}
+Parent.prototype.getName = function(){
+    return this.name;
+}
+
+let source = {
+  func: function(){},
+  obj: new Parent(),
+  arr: [1,2,3],
+  unde: undefined,
+  reg: /123/,
+  date: new Date(),
+  nan: NaN,
+  sym: Symbol(1),
+  set: new Set()
+}
+// source.loop = source		// 设置循环引用
+
+let target = JSON.parse(JSON.stringify(source))
+
+console.log(source)
+console.log(target)
+```
+
+虽然这种方法可以能很好也很简便地解决深拷贝的问题，但是从输出的结果可以看出这种方法的缺陷：
+
+1. 拷贝的对象中如果有值为函数、undefined、symbol 这几种类型，序列化后键值对会一起消失
+2. 无法拷贝对象的原型链
+3. Date 对象会变为字符串+
+4. 对象中含有 NaN、Infinity 以及 -Infinity，序列化的结果会变成 null
+5. 拷贝 RegExp、Set、Map 引用类型会变成空对象
+6. 无法拷贝对象的循环引用
+
+![image-20210128121959072](F:\Study_Document\笔记\image\image-20210128121959072.png)
+
+#### 2. 基础版（手写递归）
+
+```js
+function deepClone(target){
+  function isObject(o){
+    return (typeof o === 'object' || typeof o === 'function') && o !== null;
+  }
+
+  if(!isObject(target)) throw new Error('不是对象类型')
+
+  const cloneTarget = Array.isArray(target) ? [] : {}
+  for(let key of Object.keys(target)){
+    cloneTarget[key] = (isObject(target[key]) && typeof target[key] !== 'function') 
+        				? deepClone(target[key]) 
+    					: target[key]
+  }
+  return cloneTarget;
+}
+```
+
+这种方式与上述的 JSON.stringfy 深拷贝都有比较明显的不足，但已经能满足基础的深拷贝需求。
+
+#### 3. 升级版（改进后递归写法）
+
+针对基础版深拷贝的缺陷，有以下的解决缺陷的思路：
+
+1. 针对不可枚举属性以及Symbol类型，使用 Reflect.ownKeys 方法来代替 Object.keys 获取对象的属性
+2. 针对Date、RegExp、Set 类型，生成一个新的实例返回
+3. 针对原型链丢失的问题，使用浅拷贝对象来继承原型链
+4. 针对循环引用的问题，利用 WeakMap 类型作为 Hash 表，如果存在循环，则引用直接返回 WeakMap 存储的值。
+
+```js
+function deepClone(target, hash = new WeakMap()){
+  function isObject(o){
+    return (typeof o === 'object' || typeof o === 'function') && o !== null;
+  }
+
+  if(!isObject(target)) throw new Error('不是对象类型')
+
+  if(target.constructor === Date) return new Date(target);    // 日期对象返回日期，下面同理
+  if(target.constructor === RegExp) return new RegExp(target);
+  if(target.constructor === Set) return new Set(target);
+
+  if(hash.has(target)) return hash.get(target)    // 解决循环引用的问题
+
+  let cloneTarget = Object.create(    // 浅拷贝目标对象，并继承原型链
+    Object.getPrototypeOf(target),
+    Object.getOwnPropertyDescriptors(target)		// 获取 source 的所有属性
+  );
+  hash.set(target, cloneTarget)   // key 为目标对象，value 为拷贝后的对象
+  
+  for(let key of Reflect.ownKeys(target)){
+    cloneTarget[key] = (isObject(target[key]) && typeof target[key] !== 'function') ? deepClone(target[key], hash) : target[key]
+  }
+  return cloneTarget;
+}
+```
+
+测试用例与运行结果
+
+```js
+function Parent(){
+  this.name = 1
+}
+Parent.prototype.getName = function(){
+    return this.name;
+}
+
+let syma = Symbol('1')
+let source = {
+  func: function(){},
+  obj: new Parent(),
+  arr: [1,2,3],
+  unde: undefined,
+  reg: /123/,
+  date: new Date(),
+  nan: NaN,
+  sym: Symbol(1),
+  set: new Set(),
+  [syma]: {a: 20}
+}
+source.loop = source
+console.log(source)
+
+let target = deepClone(source);
+target[syma].b = 50
+console.log(target)
+```
+
+![image-20210129114554019](F:\Study_Document\笔记\image\image-20210129114554019.png)
+
+> 那么问题来了，针对第四点为什么要用WeakMap，而不用Map呢？
+>
+> 因为WeakMap的键名所引用的对象是弱引用的，即垃圾回收机制不会将该引用考虑在内。因此，当引用的对象的其他引用都被清除了，那么垃圾回收机制将释放该对象所占用的内存。
+>
+> 所以使用 WeakMap 能有效防止内存泄露。
+
+#### 4. 使用第三方库 lodash
+
+```js
+import _ from 'lodash'
+let target = _.cloneDeep(source)
+```
+
+
+
++ [ECMAScript 6 入门](https://es6.ruanyifeng.com/)
++ [如何实现一个深浅拷贝？](https://kaiwu.lagou.com/course/courseInfo.htm?courseId=601#/detail/pc?id=6175)
