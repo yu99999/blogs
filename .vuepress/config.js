@@ -98,7 +98,7 @@ module.exports = {
   "configureWebpack": {
     "resolve": {
       "alias": {
-        '@img': path.join(process.cwd(), '/blogs-img')
+        '@img': path.join(process.cwd(), '/image')  // 将路径替换为 @img/
       }
     }
   }
