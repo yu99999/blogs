@@ -154,3 +154,49 @@ tags:
 ```
 
 
+
+## 6. 解决 inline-block 的间隙问题
+
+当元素使用 inline-block 布局时，可以将元素想象成文字，如果元素和元素之间若有空格或回车符，那么它们之间就会有间隙。例如下面这个例子
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>test</title>
+  <style>
+    *{margin: 0; padding: 0;}
+    .container{
+      width: 800px;
+      height: 200px;
+    }
+    .left{
+      width: 200px;
+      height: 200px;
+      display: inline-block;
+      background-color: aquamarine;
+    }
+    .right{
+      width: 500px;
+      height: 200px;
+      display: inline-block;
+      background-color: brown;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">左</div>
+    <div class="right">右</div>
+  </div>
+</body>
+</html>
+```
+
+<img src="@img/image-20210411194753680.png" alt="image-20210411194753680" style="zoom:80%;" />
+
+可以看到左右两个盒子间有一条间隙，造成这条间隙的原因就是两个元素间的回车符。那么解决问题也很简单，有下面这几种方法
+
+1. 删除回车符
+2. 将父元素的字体大小 font-size 设置为0，然后重新设置子元素的字体大小。
+

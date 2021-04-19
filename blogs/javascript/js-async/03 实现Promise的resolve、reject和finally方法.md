@@ -1,6 +1,6 @@
 ---
 title: 03 实现Promise的resolve、reject和finally方法
-date: 2021-2-26
+date: 2021-2-25
 categories:
  - JavaScript
 tags:

@@ -16,7 +16,8 @@ module.exports = {
       children: [
         createSideBar('JS基础', JAVASCRIPT_PATH + '/js-base'),
         createSideBar('JS原理', JAVASCRIPT_PATH + '/js-theory'),
-        createSideBar('V8引擎', JAVASCRIPT_PATH + '/js-v8')
+        createSideBar('JS引擎', JAVASCRIPT_PATH + '/js-v8'),
+        createSideBar('JS异步', JAVASCRIPT_PATH + '/js-async')
       ]
     },
     {

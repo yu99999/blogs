@@ -11,7 +11,7 @@ module.exports = {
       "link",
       {
         "rel": "icon",
-        "href": "/favicon.ico"
+        "href": "/avatar.png"
       }
     ],
     [
@@ -51,7 +51,7 @@ module.exports = {
         "items": [
           {
             "text": "GitHub",
-            "link": "https://github.com/recoluan",
+            "link": "https://github.com/yudeshengya/yudeshengya.github.io",
             "icon": "reco-github"
           }
         ]
@@ -82,7 +82,7 @@ module.exports = {
     "search": true,
     "searchMaxSuggestions": 10,
     "lastUpdated": "Last Updated",
-    "author": "xiaode",
+    "author": "小德",
     "authorAvatar": "/avatar.png",
     "record": "xxxx",
     "startYear": "2021",

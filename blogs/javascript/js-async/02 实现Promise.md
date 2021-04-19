@@ -1,6 +1,6 @@
 ---
 title: 02 实现Promise
-date: 2021-2-25
+date: 2021-2-24
 categories:
  - JavaScript
 tags:

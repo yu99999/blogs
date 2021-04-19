@@ -216,7 +216,7 @@ module.exports = {
 
 如果使用ES6的 import 语法，那么在生产环境下，会自动移除没有使用到的代码。
 
-原理：Tree Shaking 是在编译时进行无用代码消除的，因此需要在编译时确定依赖关系，进而确定哪些代码可以被摇掉，这就是 ESM 的优势。反观 CommonJS，由于它是在执行代码才能动态确定依赖，所以不具有 Tree Shaking 的能力。
+Tree Shaking 是在编译时进行无用代码消除的，因此需要在编译时确定依赖关系，进而确定哪些代码可以被摇掉，这就是 ESM 的优势。反观 CommonJS，由于它是在执行代码才能动态确定依赖，所以不具有 Tree Shaking 的能力。
 
 对于副作用模块，可以在 package.json 进行配置
 
@@ -225,6 +225,8 @@ module.exports = {
     "sideEffects": ["*.css"]	// 所有css文件模块都有副作用
 }
 ```
+
+原理：tree-shaking 依赖 ESModule 模块语法，通过编译阶段的静态分析，找到没有引入的模块并打上标记，然后在压缩阶段会利用 uglify-js、terser 等压缩工具真正地删除这些无用代码
 
 
 

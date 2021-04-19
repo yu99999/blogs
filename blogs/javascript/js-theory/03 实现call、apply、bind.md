@@ -68,7 +68,7 @@ Function.prototype._bind = function(context, ...args){
   const funcBack = function(){
     // new创建的对象会有构造函数的原型对象
     // 如果是构造函数不修改this，否则将this指向修改为上下文
-    self.apply(this instanceof self ? this : context, args.concat(Array.prototype.slice.call(arguments)))
+    return self.apply(this instanceof self ? this : context, args.concat(Array.prototype.slice.call(arguments)))
   }
   // 修改返回函数的原型
   funcBack.prototype = Object.create(this.prototype);
