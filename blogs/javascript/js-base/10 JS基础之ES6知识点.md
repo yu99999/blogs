@@ -1,6 +1,6 @@
 ---
 title: 10 JS基础之ES6知识点
-date: 2021-3-27
+date: 2021-3-22
 categories:
  - JavaScript
 tags:
@@ -207,3 +207,78 @@ var Person = function Person(name) {
 var p = new Person('a');
 ```
 
+
+
+## 6. Proxy 与 Object.defineProperty
+
+Vue.js 中有一个核心机制就是**响应式**，本质是当数据变化后会自动执行某个函数，映射到组件上，从而触发组件的重新渲染。而实现响应式的核心 API 就是 Object.defineProperty（Vue2.0）和 Proxy（Vue3.0）
+
+### Object.defineProperty
+
+Object.defineProperty 的语法如下，可以在一个对象上定义一个新属性或修改某个现有属性
+
+```js
+Object.defineProperty(obj, prop, descriptor)
+```
+
+descriptor 属性描述符有以下几个可选键值，其中 value、writable 和 get、set 两对互斥（只能同时出现一对）
+
++ configurable：当值为 ture 时，该属性描述符才能被改变，也能被删除。默认为 false
++ enumerable：当值为 true 时，该属性描述符才能出现在对象的枚举属性中。默认为 false
++ value：属性对应的值。默认为 undefined
++ writable：当值为 true 时，值才能被改变。默认为 false
++ get：当访问该属性时，会调用此函数，函数的返回值会用作属性值。默认为 undefined
++ set：当属性值被修改时，会调用此函数，方法接受一个参数。默认为 undefined
+
+```js
+let value = 1;
+const obj = {};
+Object.defineProperty(obj, 'a', {
+  configurable: true,
+  enumerable: true,
+  get(){
+    return value
+  },
+  set(v){
+    console.log('set')
+    value = v
+  }
+})
+```
+
+Object.defineProperty 缺点在于只能重新定义属性的读取和设置行为
+
+
+### Proxy
+
+相比于 Object.defineProperty，Proxy 提供了更多的行为。Proxy 的语法如下，用于创建一个对象的代理，从而实现基本操作的拦截和自定义
+
+```js
+const p = new Proxy(target, handler)
+```
+
+handle 参数是一个对象，用来定制拦截行为，包含有 Proxy 的各个拦截器，多达13种，下面举出几个常见拦截器
+
++ get：属性读取操作的拦截器
++ set：属性设置操作的拦截器
++ deleteProperty：delete 操作符的拦截器
+
+```js
+const b = {a: 1}
+const obj = new Proxy(b, {
+  get(target, prop){
+    return target[prop]
+  },
+  set(target, prop, value){
+    console.log('set')
+    target[prop] = value;
+  },
+  deleteProperty(target, prop){
+    console.log('delete')
+    delete target[prop]
+    return true;
+  }
+})
+```
+
+可以发现，Proxy 能够监听新属性的添加以及属性的删除，而 Object.defineProperty 不能。

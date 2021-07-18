@@ -6,6 +6,7 @@ const BROWSER_PATH = '/blogs/browser';
 const PERFORMANCE_PATH = '/blogs/performance';
 const ALGORITHM_PATH = '/blogs/algorithm';
 const CSS_PATH = '/blogs/css'
+const EXTEND_PATH = '/blogs/extend'
 
 
 module.exports = {
@@ -26,6 +27,7 @@ module.exports = {
       children: [
         createSideBar('HTTP', NET_PATH + '/http'),
         createSideBar('TCP', NET_PATH + '/tcp'),
+        createSideBar('其他', NET_PATH + '/other'),
       ]
     },
     {
@@ -40,6 +42,7 @@ module.exports = {
     createSideBar('CSS', CSS_PATH),
     createSideBar('性能相关', PERFORMANCE_PATH),
     createSideBar('算法', ALGORITHM_PATH),
+    createSideBar('扩展', EXTEND_PATH),
     
   ]
 }

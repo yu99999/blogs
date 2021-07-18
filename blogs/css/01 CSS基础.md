@@ -200,3 +200,47 @@ tags:
 1. 删除回车符
 2. 将父元素的字体大小 font-size 设置为0，然后重新设置子元素的字体大小。
 
+
+
+## 7. flex 属性
+
+flex 属性是 flex-grow、flex-shrink 和 flex-basis 的简写。
+
+```css
+/* 相当于 flex: 1 1 0; */
+/* 也就是 flex-grow: 1 */
+flex: 1;
+
+/* flex-basis: 10px; */
+flex: 10px;
+
+/* 两个值: flex-grow | flex-shrink */
+flex: 2 2;
+```
+
+
+
+## 8. 溢出行用省略号表示
+
+单行文本超出使用省略号表示，不过前提是需要已知宽度。
+
+```css
+p{
+    width: 200px;
+    text-overflow: ellipsis;    /* 文本超出使用省略号表示 */
+    white-space: nowrap;        /* 强制文本不换行 */
+    overflow: hidden;           /* 元素超出部分隐藏 */
+}
+```
+
+多行文本溢出使用省略号表示
+
+```css
+p{
+    display: -webkit-box;         /* 弹性伸缩盒子模型 */
+    -webkit-box-orient: vertical; /* 设置伸缩盒子内子元素的排列顺序 */
+    -webkit-line-clamp: 3;        /* 限制显示的行数 */
+    overflow: hidden;
+}
+```
+
