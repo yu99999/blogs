@@ -5,7 +5,7 @@ module.exports = {
   "title": "小德的博客",
   "description": "写点东西",
   "dest": "public",
-  "base": "/my_blogs/",
+  "base": "/blogs/",
   "head": [
     [
       "link",
