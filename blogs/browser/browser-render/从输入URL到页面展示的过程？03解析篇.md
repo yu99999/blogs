@@ -136,4 +136,15 @@ CSS 具有**继承**特性，也就是会继承父节点样式作为当前样式
 或者通过 async 和 defer 来标记 js 文件，从而避免下载过程阻塞DOM生成
 
 + async：js文件异步下载，下载完成立即执行。
-+ defer：异步下载，等到 DOMContentLoaded 事件之后执行。
++ defer：推迟下载，等到 DOMContentLoaded 事件之后执行。
+
+### 关于 DOMContentLoaded 和 load
+
++ DOMContentLoaded 事件：当纯HTML被完全加载以及解析时，DOMContentLoaded 事件会被触发，而不必等待样式表，图片或者子框架完成加载。也就是 jQuery 中的 $(document).ready(function() { });
++ load 事件：等所有资源加载完成之后（需要等待样式表，图片或者子框架等资源完成加载），load 事件才会被触发。
+
+关于上面这两者的区别，我们可以点击进入[这个站点来观察一下](https://testdrive-archive.azurewebsites.net/HTML5/DOMContentLoaded/Default.html)
+
+另外，我们可以打开 NetWork 面板来查看这两者执行的具体时刻，如下图，蓝色的线是 DOMContentLoaded 执行时刻，红色的线是 load 执行时刻。
+
+<img src="@img/image-20210802005909948.png" alt="image-20210802005909948" style="zoom:80%;" />

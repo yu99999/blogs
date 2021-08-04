@@ -311,3 +311,14 @@ btn.onclick = () => {
 }
 ```
 
+
+
+### 使用合适的 hash 值
+
+我们可以使用 hash 值来提升对浏览器缓存的利用效率，当浏览器去拉取文件时，对于 hash 值没有修改的文件会直接从缓存中取，而对于 hash 值已经修改的文件才会从服务器中获取，有效利用对于我们的网页有着巨大的性能提升。
+
+ webpack 对输出文件有三种 hash 值：
+
++ hash：hash 是项目级别的，每次构建会生成一个 hash 值，每个输出文件共用同个 hash 值，只有某个项目文件发生修改，就会改变 hash 值。
++ chunkhash：与 webpack 的 chunk 相关（entry 的初始化 chunk，以及可延迟加载的 split chunks），相同 chunk 的输出文件有着相同的 hash 值。
++ contenthash：针对文件内容的，每个文件都有独立的 hash 值，只有文件的相关模块修改了，输出的 hash 值才会改变。
