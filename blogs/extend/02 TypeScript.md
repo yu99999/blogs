@@ -482,7 +482,39 @@ tsconfig.json 有几个重要的字段：
 
 
 
+## 内置类型
 
+1. Omit：忽略，可以从一个对象类型中删除指定属性
+
+   ```ts
+   interface Person {
+     name: string,
+     age: number,
+     sex: string
+   }
+   type A = Omit<Person, 'name' | 'age'>
+   
+   const a: A = {
+     sex: ""
+   }
+   ```
+
+2. Partial：部分的，将所有属性都变为可选参数
+
+   ```ts
+   interface Person {
+     name: string,
+     age: number,
+     sex: string
+   }
+   type A = Partial<Person>
+   
+   const a: A = {
+     name: ""
+   }
+   ```
+
+3. 
 
 
 

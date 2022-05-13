@@ -52,10 +52,6 @@ tags:
 
 <img src="@img/image-20210214003229256.png" alt="image-20210214003229256" style="zoom: 67%;" />
 
-```text
-keep-alive
-```
-
 
 
 ## 5. 建立 TLS 连接

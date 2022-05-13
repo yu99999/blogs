@@ -4,7 +4,7 @@ date: 2021-03-04
 categories:
  - CSS
 tags:
- - CSS
+ - CSS基础
 ---
 
 
@@ -66,6 +66,8 @@ tags:
 5. 粘性定位（sticky）：基于用户的滚动位置进行定位，在相对定位和固定定位中切换，不脱离文档流。当页面滚动超出目标区域时，会表现为固定定位，固定到目标位置。
 
 脱离文档流是指该元素不再在文档流中占据空间，而是浮动在文档流的上方。
+
+
 
 
 
@@ -140,22 +142,7 @@ tags:
 
 
 
-## 5. 画一个三角形
-
-```css
-.triangle{
-  width: 0;
-  height: 0;
-  border-top: 100px solid red;
-  border-bottom: 100px solid transparent;
-  border-left: 100px solid transparent;
-  border-right: 100px solid transparent;
-}
-```
-
-
-
-## 6. 解决 inline-block 的间隙问题
+## 5. 解决 inline-block 的间隙问题
 
 当元素使用 inline-block 布局时，可以将元素想象成文字，如果元素和元素之间若有空格或回车符，那么它们之间就会有间隙。例如下面这个例子
 
@@ -202,7 +189,7 @@ tags:
 
 
 
-## 7. flex 属性
+## 6. flex 属性
 
 flex 属性是 flex-grow、flex-shrink 和 flex-basis 的简写。
 
@@ -220,7 +207,7 @@ flex: 2 2;
 
 
 
-## 8. 溢出行用省略号表示
+## 7. 溢出行用省略号表示
 
 单行文本超出使用省略号表示，不过前提是需要已知宽度。
 
@@ -243,4 +230,6 @@ p{
     overflow: hidden;
 }
 ```
+
+
 

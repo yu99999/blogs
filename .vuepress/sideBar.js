@@ -39,7 +39,14 @@ module.exports = {
         createSideBar('浏览器安全', BROWSER_PATH + '/browser-secure')
       ]
     },
-    createSideBar('CSS', CSS_PATH),
+    {
+      title: 'CSS',
+      sidebarDepth: 2,
+      children: [
+        createSideBar('CSS基础', CSS_PATH + '/base'),
+        createSideBar('CSS布局', CSS_PATH + '/layout')
+      ]
+    },
     createSideBar('性能相关', PERFORMANCE_PATH),
     createSideBar('算法', ALGORITHM_PATH),
     createSideBar('扩展', EXTEND_PATH),
